@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'home.dart';
+import 'ui.dart';
 
 void main() {
   runApp(const FutbolCarkApp());
@@ -14,7 +14,7 @@ class FutbolCarkApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Futbol Kariyer Çarkı',
       theme: ThemeData.dark(),
-      home: const HomeScreen(),
+      home: const StartScreen(),
     );
   }
 }
