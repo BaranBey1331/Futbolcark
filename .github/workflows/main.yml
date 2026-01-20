@@ -11,32 +11,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Repo kodunu çek
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Flutter kur
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.22.2"
 
-      # Eğer flutter create yapılmamışsa proje yapısını oluştur
+      # android/ yoksa flutter create ile üret (paket adı zorla lowercase)
       - name: Ensure Flutter project structure
         run: |
           if [ ! -d "android" ]; then
-            flutter create .
+            flutter create . --project-name futbolcark
           fi
 
-      # Paketleri indir
       - name: Flutter pub get
         run: flutter pub get
 
-      # Debug APK derle
       - name: Build APK (debug)
         run: flutter build apk --debug
 
-      # APK'yı artifact olarak yükle
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
