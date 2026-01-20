@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -17,18 +18,25 @@ jobs:
         with:
           flutter-version: "3.22.2"
 
-      # android/ yoksa üret (ama bizim kodu geri getir)
-      - name: Ensure Flutter project structure
+      - name: Debug repo tree (sanity)
+        run: |
+          echo "== ROOT LIST =="
+          ls -la
+          echo "== lib =="
+          ls -la lib || true
+          echo "== pubspec.yaml =="
+          test -f pubspec.yaml && echo "pubspec OK" || (echo "pubspec MISSING" && exit 1)
+
+      # android/ yoksa üret, ama bizim lib/pubspec zaten root'ta olduğu için demo kullanamaz
+      - name: Ensure Android platform exists
         run: |
           if [ ! -d "android" ]; then
             flutter create . --project-name futbolcark --platforms android
-            git checkout -- pubspec.yaml lib || true
           fi
 
       - name: Pub get
         run: flutter pub get
 
-      # split-per-abi + build number (telefonda sürüm görünsün)
       - name: Build APKs (debug split per abi)
         run: |
           flutter build apk --debug --split-per-abi \
