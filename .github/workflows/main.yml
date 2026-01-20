@@ -8,7 +8,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -18,16 +17,7 @@ jobs:
         with:
           flutter-version: "3.22.2"
 
-      - name: Debug repo tree (sanity)
-        run: |
-          echo "== ROOT LIST =="
-          ls -la
-          echo "== lib =="
-          ls -la lib || true
-          echo "== pubspec.yaml =="
-          test -f pubspec.yaml && echo "pubspec OK" || (echo "pubspec MISSING" && exit 1)
-
-      # android/ yoksa üret, ama bizim lib/pubspec zaten root'ta olduğu için demo kullanamaz
+      # android/ yoksa üret
       - name: Ensure Android platform exists
         run: |
           if [ ! -d "android" ]; then
