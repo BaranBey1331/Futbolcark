@@ -6,6 +6,8 @@ import 'models.dart';
 const kBgTop = Color(0xFF07161C);
 const kBgMid = Color(0xFF0B2530);
 const kBgBot = Color(0xFF081F26);
+// Geriye uyumluluk: eski kodlar kGlass kullanıyor
+const kGlass = kGlassStrong;
 
 const kGlassStrong = Color(0x331A2226);
 const kBorder = Color(0xFF6D8B97);
