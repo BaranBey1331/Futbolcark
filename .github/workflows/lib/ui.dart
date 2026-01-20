@@ -380,4 +380,247 @@ class _RatingWheelScreenState extends State<RatingWheelScreen> {
                 child: FilledButton.icon(
                   onPressed: () {
                     spin();
-                    Future.delayed(const Duration(milliseconds
+                    Future.delayed(const Duration(milliseconds: 900), () {
+                      if (!mounted) return;
+                      final ovr = last ?? 70;
+                      showDialog(
+                        context: context,
+                        builder: (_) => _RatingDialog(
+                          name: widget.playerName,
+                          country: widget.country,
+                          position: widget.position,
+                          number: widget.number,
+                          overall: ovr,
+                        ),
+                      );
+                    });
+                  },
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Çevir'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RatingDialog extends StatelessWidget {
+  final String name;
+  final String country;
+  final String position;
+  final int number;
+  final int overall;
+
+  const _RatingDialog({
+    required this.name,
+    required this.country,
+    required this.position,
+    required this.number,
+    required this.overall,
+  });
+
+  int clamp(int v) => v.clamp(1, 99);
+
+  @override
+  Widget build(BuildContext context) {
+    // basit stat üretimi (sonra gerçek formül yaparız)
+    final pace = clamp(overall + 5);
+    final shot = clamp(overall + 6);
+    final pass = clamp(overall - 14);
+    final dri = clamp(overall + 4);
+    final def = clamp(overall - 40);
+    final phy = clamp(overall - 2);
+
+    return Dialog(
+      backgroundColor: const Color(0xFF151A1E),
+      insetPadding: const EdgeInsets.all(18),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      child: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              children: [
+                const CircleAvatar(radius: 26, backgroundColor: Colors.white10, child: Icon(Icons.person, color: Colors.white70)),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('#$number  ${name.toUpperCase()}', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w800)),
+                      const SizedBox(height: 4),
+                      Text(country, style: const TextStyle(color: Colors.white70)),
+                      const SizedBox(height: 4),
+                      Text(position, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 14),
+            Text('$overall', style: const TextStyle(fontSize: 42, fontWeight: FontWeight.w900)),
+            const Text('Reyting', style: TextStyle(color: Colors.white70)),
+            const SizedBox(height: 12),
+            _statRow('PAC', pace, 'ŞUT', shot, 'PAS', pass),
+            const SizedBox(height: 10),
+            _statRow('DRI', dri, 'DEF', def, 'FİZ', phy),
+            const SizedBox(height: 14),
+            FilledButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Tamam'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _statRow(String a, int av, String b, int bv, String c, int cv) {
+    Widget box(String k, int v) => Expanded(
+          child: Column(
+            children: [
+              Text('$v', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
+              const SizedBox(height: 2),
+              Text(k, style: const TextStyle(color: Colors.white70)),
+            ],
+          ),
+        );
+
+    return Row(
+      children: [
+        box(a, av),
+        box(b, bv),
+        box(c, cv),
+      ],
+    );
+  }
+}
+
+class _HeaderTitle extends StatelessWidget {
+  final String text;
+  const _HeaderTitle(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      text,
+      style: const TextStyle(
+        fontSize: 34,
+        fontWeight: FontWeight.w300,
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
+class _CareerCard extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _CareerCard({
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: const Color(0xFF101C22),
+      borderRadius: BorderRadius.circular(18),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(18),
+        onTap: onTap,
+        child: Container(
+          height: 220,
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: Colors.white12),
+            gradient: const LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [Color(0xFF15252D), Color(0xFF0E1B21)],
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: Icon(icon, color: Colors.white70),
+              ),
+              const Spacer(),
+              Text(title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800)),
+              const SizedBox(height: 4),
+              Text(subtitle, style: const TextStyle(color: Colors.white70)),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _BottomHint extends StatelessWidget {
+  const _BottomHint();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Text(
+        'İlk hedef: Reyting çarkı + oyuncu oluşturma',
+        style: TextStyle(color: Colors.white.withOpacity(.55)),
+      ),
+    );
+  }
+}
+
+class _LabeledField extends StatelessWidget {
+  final String label;
+  final Widget child;
+
+  const _LabeledField({required this.label, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(color: Colors.white70)),
+        const SizedBox(height: 6),
+        child,
+      ],
+    );
+  }
+}
+
+class _Dropdown<T> extends StatelessWidget {
+  final T value;
+  final List<T> items;
+  final void Function(T v) onChanged;
+
+  const _Dropdown({required this.value, required this.items, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField<T>(
+      value: value,
+      items: items.map((e) => DropdownMenuItem<T>(value: e, child: Text('$e'))).toList(),
+      onChanged: (v) {
+        if (v != null) onChanged(v);
+      },
+      decoration: const InputDecoration(border: OutlineInputBorder()),
+    );
+  }
+}
