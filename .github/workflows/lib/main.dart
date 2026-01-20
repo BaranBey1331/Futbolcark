@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'home.dart';
 
 void main() {
   runApp(const FutbolCarkApp());
@@ -13,15 +14,7 @@ class FutbolCarkApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Futbol Kariyer Çarkı',
       theme: ThemeData.dark(),
-      home: const Scaffold(
-        body: Center(
-          child: Text(
-            'Futbol Kariyer Çarkı\n(Altyapı hazır)',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 22),
-          ),
-        ),
-      ),
+      home: const HomeScreen(),
     );
   }
 }
