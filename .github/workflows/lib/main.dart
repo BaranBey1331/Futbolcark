@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'ui.dart';
 
-void main() {
-  runApp(const FutbolCarkApp());
-}
+void main() => runApp(const FutbolCarkApp());
 
 class FutbolCarkApp extends StatelessWidget {
   const FutbolCarkApp({super.key});
