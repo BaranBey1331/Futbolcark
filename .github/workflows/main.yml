@@ -1,0 +1,32 @@
+name: Android APK Build
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repo kodunu çek
+        uses: actions/checkout@v4
+
+      - name: Flutter kur
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "stable"
+
+      - name: Paketleri indir
+        run: flutter pub get
+
+      - name: APK derle (debug)
+        run: flutter build apk --debug
+
+      - name: APK artifact olarak yükle
+        uses: actions/upload-artifact@v4
+        with:
+          name: futbolcark-debug-apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
