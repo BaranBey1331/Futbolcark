@@ -19,21 +19,23 @@ jobs:
         with:
           flutter-version: "3.22.2"
 
-      # android/ yoksa flutter create ile üret (paket adı zorla lowercase)
+      # android/ yoksa üret ama bizim lib/ ve pubspec'i ezmesine izin verme
       - name: Ensure Flutter project structure
         run: |
           if [ ! -d "android" ]; then
-            flutter create . --project-name futbolcark
+            flutter create . --project-name futbolcark --platforms android
+            git checkout -- pubspec.yaml lib || true
           fi
 
       - name: Flutter pub get
         run: flutter pub get
 
-      - name: Build APK (debug)
-        run: flutter build apk --debug
+      # ABI'lara göre ayır (arm64 + armeabi-v7a)
+      - name: Build APK (debug, split per abi)
+        run: flutter build apk --debug --split-per-abi
 
-      - name: Upload APK artifact
+      - name: Upload APK artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: futbolcark-debug-apk
-          path: build/app/outputs/flutter-apk/app-debug.apk
+          name: futbolcark-apks
+          path: build/app/outputs/flutter-apk/*.apk
